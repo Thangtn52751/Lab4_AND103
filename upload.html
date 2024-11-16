@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tải ảnh lên</title>
+    <style>
+        body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    flex-direction: column;
+}
+
+form {
+    margin-bottom: 20px;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+input[type="file"] {
+    padding: 10px;
+    border-radius: 4px;
+    margin: 10px 0;
+}
+
+img {
+    margin-top: 20px;
+    max-width: 300px;
+    max-height: 300px;
+    border-radius: 8px;
+}
+    </style>
+</head>
+<body>
+
+<h1>Tải ảnh lên và xem kết quả</h1>
+
+<form id="uploadForm" enctype="multipart/form-data">
+    <input type="file" name="image" accept="image/*" required>
+    <button type="submit">Tải ảnh lên</button>
+</form>
+
+<div id="result"></div>
+
+<script>
+    const form = document.getElementById('uploadForm');
+    form.addEventListener('submit', async (event) => {
+        event.preventDefault();
+
+        const formData = new FormData(form);
+        try {
+            const response = await fetch('/upload', {
+                method: 'POST',
+                body: formData
+            });
+            const data = await response.json();
+
+            if (data.imageUrl) {
+                const imageUrl = data.imageUrl;
+                const resultDiv = document.getElementById('result');
+                resultDiv.innerHTML = `<img src="${imageUrl}" alt="Ảnh tải lên">`;
+            } else {
+                alert('Lỗi khi tải ảnh lên!');
+            }
+        } catch (error) {
+            console.error('Lỗi khi tải ảnh lên:', error);
+        }
+    });
+</script>
+
+</body>
+</html>
